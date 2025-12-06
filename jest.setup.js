@@ -35,13 +35,18 @@ HTMLCanvasElement.prototype.getContext = jest.fn(() => ({
   })),
 }))
 
-// Mock requestAnimationFrame
+// Mock requestAnimationFrame - DO NOT auto-call to prevent infinite loops
 global.requestAnimationFrame = jest.fn((cb) => {
-  cb(0)
-  return 0
+  // Return a mock ID but don't execute callback
+  return Math.random()
 })
 
 global.cancelAnimationFrame = jest.fn()
+
+// Helper to manually trigger RAF callbacks in tests if needed
+global.flushRafCallbacks = () => {
+  // No-op since we don't track callbacks anymore
+}
 
 // Mock Web Audio API
 global.AudioContext = jest.fn().mockImplementation(() => ({

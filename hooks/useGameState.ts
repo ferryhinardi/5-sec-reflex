@@ -68,6 +68,7 @@ export function useGameState() {
         
         return {
           ...prev,
+          combo: 0,
           isRoundActive: false,
           currentScreen: 'gameover',
           lastRating: rating,
@@ -79,9 +80,10 @@ export function useGameState() {
       // Calculate score
       let baseScore = GAME_CONFIG.scoring[rating];
       const newCombo = prev.combo + 1;
-      const comboBonus = Math.floor(
-        baseScore * newCombo * GAME_CONFIG.scoring.comboMultiplier
-      );
+      // Combo bonus only applies from 2nd hit onwards
+      const comboBonus = newCombo >= 2 
+        ? Math.floor(baseScore * newCombo * GAME_CONFIG.scoring.comboMultiplier)
+        : 0;
       const totalScore = baseScore + comboBonus;
 
       return {
